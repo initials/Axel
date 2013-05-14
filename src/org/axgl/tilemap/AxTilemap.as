@@ -516,11 +516,11 @@ package org.axgl.tilemap {
 			var offset:uint = sy * segment.width + sx;
 			var bufferOffset:int = segment.bufferOffsets[offset];
 			
-			var u:Number = (index % tilesetCols) * uvWidth;
-			var v:Number = Math.floor(index / tilesetCols) * uvHeight;
-			
 			data[y * cols + x] = index;
 			index--;
+			
+			var u:Number = (index % tilesetCols) * uvWidth;
+			var v:Number = Math.floor(index / tilesetCols) * uvHeight;
 			
 			if (bufferOffset == -1) {
 				segment.bufferOffsets[offset] = segment.bufferSize++;
