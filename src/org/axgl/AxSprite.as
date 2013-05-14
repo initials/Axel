@@ -500,7 +500,7 @@ package org.axgl {
 			return this;
 		}
 		
-		public function startFlicker(duration:Number = 0, callback:Function = null, rate:uint = 1, type:uint = AxFlickerSpriteEffect.BLINK):AxSprite {
+		public function startFlicker(duration:Number = 0, callback:Function = null, rate:uint = 1, type:uint = 0):AxSprite {
 			if (flickerEffect != null && flickerEffect.active) {
 				flickerEffect.destroy();
 			}
