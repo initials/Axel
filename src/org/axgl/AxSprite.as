@@ -455,35 +455,17 @@ package org.axgl {
 			if (countTris) {
 				Ax.debugger.tris += triangles;
 			}
-
-			/*Ax.context.setProgram(AxRenderer.spriteShader);
-			Ax.context.setTextureAt(0, texture.texture);
-			Ax.context.setBlendFactors(Context3DBlendFactor.SOURCE_ALPHA, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
-			Ax.context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, matrix, true);
-			Ax.context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 4, uv);
-			Ax.context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, transform);
-			Ax.context.setVertexBufferAt(0, vertexBuffer, 0, Context3DVertexBufferFormat.FLOAT_3);
-			Ax.context.setVertexBufferAt(1, vertexBuffer, 3, Context3DVertexBufferFormat.FLOAT_2);
-			Ax.context.drawTriangles(AxRenderer.indexBuffer, 0, AxRenderer.indexData.length / 3);
-	
-			if (Ax.showBounds) {
-				if (debugVertexBuffer == null) {
-					calculateDebugVertexBuffer();
-				}
-	
-				matrix.prependTranslation(Math.round(bounds.x), Math.round(bounds.y), 0);
-	
-				Ax.context.setProgram(AxRenderer.debugShader);
-				Ax.context.setTextureAt(0, null);
-				Ax.context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 5, matrix, true);
-				Ax.context.setVertexBufferAt(0, debugVertexBuffer, 0, Context3DVertexBufferFormat.FLOAT_3);
-				Ax.context.setVertexBufferAt(1, null, 3, Context3DVertexBufferFormat.FLOAT_2);
-				Ax.context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 1, debugColor);
-				Ax.context.drawTriangles(AxRenderer.debugIndexBuffer, 0, AxRenderer.debugIndexData.length / 3);
-				resetDebugColor();
-			}*/
 		}
 		
+		/**
+		 * Manually adds an effect to this sprites effect list. Used to add custom effects. When using
+		 * built in effects, unless you know what you are doing, you typically want to use the
+		 * corresponding function such as startFlicker().
+		 * 
+		 * @param effect The effect to add to the sprite.
+		 * 
+		 * @return The sprite.
+		 */
 		public function addEffect(effect:AxSpriteEffect):AxSprite {
 			if (effects == null) {
 				effects = new Vector.<AxSpriteEffect>;
@@ -495,6 +477,14 @@ package org.axgl {
 			return this;
 		}
 		
+		/**
+		 * Clears all effects from this sprite (if there are any). If skipCallback is false, it will
+		 * trigger the callback that would typically finish when the effect completes.
+		 * 
+		 * @param skipCallback Whether to skip running the callback for each active effect or not.
+		 * 
+		 * @return The sprite.
+		 */
 		public function clearEffects(skipCallback:Boolean = false):AxSprite {
 			if (effects == null) {
 				return this;
@@ -513,6 +503,21 @@ package org.axgl {
 			return this;
 		}
 		
+		/**
+		 * Starts flickering this sprite, and continues for <code>duration</code> seconds. When complete, if
+		 * <code>callback</code> is not null, it will run the callback function. <code>Rate</code> determines
+		 * how often the opacity changes (1 meaning once per frame, 2 meaning once every other frame, and so
+		 * on). Type should be either AxFlickerSpriteEffect.BLINK, which means the sprite should blink back
+		 * and forth from 0 to 1 opacity, or AxFlickerSpriteEffect.FLICKER, meaning the sprite will flicker
+		 * at random opacities between 0.25 and 0.75.
+		 * 
+		 * @param duration How long to flicker for, in seconds.
+		 * @param callback The callback to run when complete, if any.
+		 * @param rate How many frames in between changing the opacity of the sprite.
+		 * @param type Which type of flicker, either AxFlickerSpriteEffect.BLINK or AxFlickerSpriteEffect.FLICKER.
+		 * 
+		 * @return The sprite.
+		 */
 		public function startFlicker(duration:Number = 0, callback:Function = null, rate:uint = 1, type:uint = 0):AxSprite {
 			if (flickerEffect != null && flickerEffect.active) {
 				flickerEffect.destroy();
@@ -521,6 +526,11 @@ package org.axgl {
 			return this;
 		}
 		
+		/**
+		 * Stops the sprite from flickering, if it is currently flickering.
+		 * 
+		 * @return The sprite.
+		 */
 		public function stopFlicker():AxSprite {
 			if (flickerEffect != null) {
 				flickerEffect.destroy();
@@ -528,6 +538,17 @@ package org.axgl {
 			return this;
 		}
 		
+		/**
+		 * Fades out the sprite to the specified opacity over the given duration. For example, if duration is 1
+		 * and targetAlpha is 0, the sprite will fade out to be invisible over the course of 1 second. If a
+		 * callback function is passed, it will be run on completion.
+		 * 
+		 * @param duration How long the fade effect should last, in seconds.
+		 * @param targetAlpha The target alpha to fade to, default 0.
+		 * @param callback The callback function to run when the fade is complete.
+		 * 
+		 * @return The sprite.
+		 */
 		public function fadeOut(duration:Number = 1, targetAlpha:Number = 0, callback:Function = null):AxSprite {
 			if (fadeEffect != null && fadeEffect.active) {
 				fadeEffect.destroy();
@@ -536,7 +557,19 @@ package org.axgl {
 			return this;
 		}
 		
+		/**
+		 * Fades in the sprite to the specified opacity over the given duration. For example, if duration is 1
+		 * and targetAlpha is 1, the sprite will fade out to be complete visible over the course of 1 second. If a
+		 * callback function is passed, it will be run on completion.
+		 * 
+		 * @param duration How long the fade effect should last, in seconds.
+		 * @param targetAlpha The target alpha to fade to, default 1.
+		 * @param callback The callback function to run when the fade is complete.
+		 * 
+		 * @return The sprite.
+		 */
 		public function fadeIn(duration:Number = 1, targetAlpha:Number = 1, callback:Function = null):AxSprite {
+			// todo: should this just alias fadeOut?
 			if (fadeEffect != null && fadeEffect.active) {
 				fadeEffect.destroy();
 			}
@@ -544,6 +577,18 @@ package org.axgl {
 			return this;
 		}
 		
+		/**
+		 * Scales the sprite over the passed duration. For example, if duration is 1 and target x and y scale are 2,
+		 * the sprite will grow to be twice the normal size over the course of 1 second. If a callback function is
+		 * passed, it will be run on completion.
+		 * 
+		 * @param duration How long the grow effect should last, in seconds.
+		 * @param targetXScale How big the x scale should be on completion of the effect.
+		 * @param targetYScale How big the y scale should be on completion of the effect.
+		 * @param callback The callback function to run when the grow is complete.
+		 * 
+		 * @return The sprite.
+		 */
 		public function grow(duration:Number = 1, targetXScale:Number = 2, targetYScale:Number = 2, callback:Function = null):AxSprite {
 			if (growEffect != null && growEffect.active) {
 				growEffect.destroy();
@@ -552,6 +597,17 @@ package org.axgl {
 			return this;
 		}
 		
+		/**
+		 * Flashes the sprite to a given color for the passed duration. For example, if the duration is 1 and the color
+		 * is 0xffff0000, the sprite's color will be set to red for 1 second. Color is in 0xAARRGGBB format. If a callback
+		 * is passed, it will be run on completion.
+		 * 
+		 * @param duration How long the flash effect should last, in seconds.
+		 * @param color What color the sprite should flash, in 0xAARRGGBB format.
+		 * @param callback The callback function to run when the flash is complete.
+		 * 
+		 * @return The sprite.
+		 */
 		public function flash(duration:Number = 0.1, color:uint = 0xffff0000, callback:Function = null):AxSprite {
 			if (flashEffect != null && flashEffect.active) {
 				flashEffect.destroy();
