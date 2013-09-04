@@ -14,6 +14,13 @@
 * You can now pass an array of arrays to AxTilemap.build in addition to passing a CSV
 * Added the ability to define a text limit strategy to limit the number of lines that are drawn in a text
 * Added an AxTilemap.getTileIndexAt to get the tile id at a given position without having to go through AxTile
+* Removed statically initialized variables for better mobile support
+* Added ability to reset the AxCache
+* Added helper method to center the origin of a sprite
+* Added ability to optionally skip callbacks when clearing effects
+* Added a flash sprite effect to flash a sprite a specific color for a period of time
+* Added setBounds helper function to the camera
+* Added the ability to set and retrieve arbitrary properties on an AxTile
 * Fixed an issue where the shake screen effect was being affected by the scroll attribute
 * Fixed an issue where scaled sprites could be rendering 1 pixel off
 * Fixed an issue where the screen attribute of an AxSprite wasn't set until the first update after creation
@@ -23,6 +30,14 @@
 * Fixed an issue where the external logger could prevent the game from loading
 * Fixed a text width issue that could cause text to be slightly longer than the requested width
 * Fixed an issue where if you bounded the camera to an area smaller than the screen the screen would flicker
+* Fixed AxParallaxSprite not working correctly in the vertical direction
+* Fixed an issue when a callback of an animation modifies the animation
+* Fixed issue where offset was not being taken into account in determining view culling of sprites
+* Fixed issue where clearEffects would fail if there were no effects
+* Fixed AxText issues regarding positioning and scaling
+* Fixed an issue with tilemaps not working with non-square tiles
+* Fixed an issue with one way collisions not being accurate
+* Fixed an issue with grabbing the final row of tiles via getTileAt
 * Made the fade effect more accurate
 
 ## 0.9.3 beta / 2013-01-22

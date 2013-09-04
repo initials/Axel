@@ -32,6 +32,11 @@ package org.axgl.tilemap {
 		 * The tile type index that this tile represents.
 		 */
 		public var index:uint;
+		/**
+		 * General properties you can set on each tile. When setting a property, it sets the
+		 * property for all tiles of that type.
+		 */
+		public var properties:Object;
 
 		/**
 		 * Creates a new AxTile.
@@ -50,6 +55,48 @@ package org.axgl.tilemap {
 			this.collision = NONE;
 			this.oneWay = false;
 			this.callback = null;
+			this.properties = {};
+		}
+		
+		/**
+		 * Sets the callback function that will be called if this tile is collided against.
+		 * 
+		 * @param callback The callback function to call on collision.
+		 */
+		public function setCallback(callback:Function):void {
+			this.callback = callback;
+		}
+		
+		/**
+		 * Sets a general untyped property on the tile.
+		 * 
+		 * @param key The name of the property to set.
+		 * @param value The value to set the property to.
+		 */
+		public function setProperty(key:String, value:*):void {
+			properties[key] = value;
+		}
+		
+		/**
+		 * Gets a general untyped property set on the tile. Returns null if that
+		 * property has not been set. If you want to know whether the property has
+		 * been set or not (even if it was set to null), use tile.hasProperty(key).
+		 * 
+		 * @param key The name of the property to get.
+		 * @return The value for the property, or null if not set.
+		 */
+		public function getProperty(key:String):* {
+			return properties[key];
+		}
+		
+		/**
+		 * Returns whether or not the passed property has been set on this tile.
+		 * 
+		 * @param key The name of the property to check.
+		 * @return Whether or not the passed property has been set on this tile.
+		 */
+		public function hasProperty(key:String):Boolean {
+			return properties.hasOwnProperty(key);
 		}
 	}
 }

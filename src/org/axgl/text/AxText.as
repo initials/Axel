@@ -6,6 +6,7 @@ package org.axgl.text {
 	
 	import org.axgl.Ax;
 	import org.axgl.AxModel;
+	import org.axgl.AxU;
 	import org.axgl.render.AxColor;
 	import org.axgl.resource.AxResource;
 
@@ -277,8 +278,20 @@ package org.axgl.text {
 			
 			var alignOffset:int = align == "right" ? (width * (scale.x - 1)) : (align == "center" ? (width / 2 * (scale.x - 1)) : 0);
 			
-			matrix.appendScale(scale.x, scale.y, 1);
-			matrix.appendTranslation(x - Ax.camera.position.x * scroll.x - Ax.camera.effectOffset.x + parentOffset.x - alignOffset, y - Ax.camera.position.y * scroll.y - Ax.camera.effectOffset.y + parentOffset.y, 0);
+			var sx:Number = x - offset.x + parentOffset.x;
+			var sy:Number = y - offset.y + parentOffset.y;
+			var scalex:Number = scale.x;
+			var scaley:Number = scale.y;
+			var cx:Number = Ax.camera.position.x * scroll.x + Ax.camera.effectOffset.x;
+			var cy:Number = Ax.camera.position.y * scroll.y + Ax.camera.effectOffset.y;
+			
+			if (scale.x != 1 || scale.y != 1) {
+				matrix.appendTranslation(-origin.x, -origin.y, 0);
+				matrix.appendScale(scale.x, scale.y, 1);
+				matrix.appendTranslation(origin.x + Math.round(sx - cx + AxU.EPSILON - alignOffset), origin.y + Math.round(sy - cy + AxU.EPSILON), 0);
+			} else {
+				matrix.appendTranslation(Math.round(sx - cx + AxU.EPSILON - alignOffset), Math.round(sy - cy + AxU.EPSILON), 0);
+			}
 			matrix.append(zooms ? Ax.camera.projection : Ax.camera.baseProjection);
 
 			if (shader != Ax.shader) {

@@ -192,7 +192,7 @@ package org.axgl.tilemap {
 			}
 			
 			this.uvWidth = 1 / (texture.width / tileWidth);
-			this.uvHeight = 1 / (texture.height / tileWidth);
+			this.uvHeight = 1 / (texture.height / tileHeight);
 
 			indexData = new Vector.<uint>;
 			vertexData = new Vector.<Number>;
@@ -294,6 +294,7 @@ package org.axgl.tilemap {
 			Ax.context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, matrix, true);
 			Ax.context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, colorTransform);
 			// Draw segments that are at least partially visible on the screen, with default segment size this will be a max of 4
+			// TODO: Use scroll when picking segments
 			var minXSegment:int = Math.floor((Ax.camera.x - x) / tileWidth / segmentWidth);
 			var maxXSegment:int = Math.floor((Ax.camera.x + Ax.viewWidth - x) / tileWidth / segmentWidth);
 			var minYSegment:int = Math.floor((Ax.camera.y - y) / tileHeight / segmentHeight);
@@ -378,27 +379,27 @@ package org.axgl.tilemap {
 							var oh:Number = target.y + target.height;
 							var opw:Number = target.previous.x + target.width;
 							var oph:Number = target.previous.y + target.height;
-							if (tile.collision & RIGHT && ow > tw && (!tile.oneWay || target.previous.x >= tw)) {
+							if (tile.collision & RIGHT && (!tile.oneWay || target.previous.x + AxU.EPSILON >= tw)) {
 								if (ow >= opw) {
 									tile.previous.x = tile.x = tw;
 								}
 								overlapped = callback(target, tile) || overlapped;
 								tile.previous.x = tile.x = tx;
-							} else if (tile.collision & LEFT && target.x < tx && (!tile.oneWay || opw <= tx)) {
+							} else if (tile.collision & LEFT && (!tile.oneWay || opw - AxU.EPSILON <= tx)) {
 								if (ow <= opw) {
 									tile.previous.x = tile.x = tx - tileWidth;
 								}
 								overlapped = callback(target, tile) || overlapped;
 								tile.previous.x = tile.x = tx;
 							}
-							if (tile.collision & DOWN && oh > th && (!tile.oneWay || target.previous.y >= th)) {
+							if (tile.collision & DOWN && (!tile.oneWay || target.previous.y + AxU.EPSILON >= th)) {
 								if (oh >= oph) {
 									tile.previous.y = tile.y = th;
 								}
 								overlapped = callback(target, tile) || overlapped;
 								tile.previous.y = tile.y = ty;
-							} else if (tile.collision & UP && target.y < ty && (!tile.oneWay || oph <= ty)) {
-								if (oh <= oph) {
+							} else if (tile.collision & UP && (!tile.oneWay || oph - AxU.EPSILON <= ty)) {
+								if (oh <= oph && !tile.oneWay) {
 									tile.previous.y = tile.y = ty - tileHeight;
 								}
 								overlapped = callback(target, tile) || overlapped;
@@ -457,7 +458,7 @@ package org.axgl.tilemap {
 		 * @return The AxTile representing the tile at the position.
 		 */
 		public function getTileAt(x:uint, y:uint):AxTile {
-			if (x < 0 || x >= cols || y < 0 || y > rows) {
+			if (x < 0 || x >= cols || y < 0 || y >= rows) {
 				throw new Error("Tile location (" + x + "," + y + ") is out of bounds");
 			}
 			return tiles[data[y * cols + x]];

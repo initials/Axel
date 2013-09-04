@@ -31,6 +31,7 @@ package org.axgl {
 	import org.axgl.sound.AxMusic;
 	import org.axgl.sound.AxSound;
 	import org.axgl.tilemap.AxTilemap;
+	import org.axgl.util.AxCache;
 	import org.axgl.util.AxLogger;
 	import org.axgl.util.AxPauseState;
 	import org.axgl.util.debug.AxDebugger;
@@ -268,6 +269,10 @@ package org.axgl {
 		 * A logger that sends messages both to the flash console and to the browser console when embedded in a webpage.
 		 */
 		public static var logger:AxLogger;
+		/**
+		 * A reference to the main game engine. You should rarely need access to this.
+		 */
+		public static var engine:Ax;
 
 		/**
 		 * Creates the game engine.
@@ -279,6 +284,8 @@ package org.axgl {
 			if (framerate > 60) {
 				throw new Error("Flash does not support framerates above 60");
 			}
+			
+			Ax.engine = this;
 			
 			Ax.requestedState = initialState;
 			Ax.requestedWidth = width;
@@ -302,7 +309,7 @@ package org.axgl {
 			Ax.debug = debugStacktrace != null && debugStacktrace.search(/:[0-9]+]$/m) > -1;
 			Ax.debuggerEnabled = Ax.debug;
 			
-			Ax.pauseState = AxPauseState;
+			//Ax.pauseState = AxPauseState;
 			Ax.initialized = false;
 			Ax.paused = false;
 			Ax.logger = new AxLogger;
@@ -494,6 +501,7 @@ package org.axgl {
 			context.configureBackBuffer(Ax.width, Ax.height, 0, false);
 			context.enableErrorChecking = true;
 			
+			AxCache.reset();
 			AxResource.initialize();
 			camera = new AxCamera;
 			camera.initialize();
@@ -582,7 +590,7 @@ package org.axgl {
 		/**
 		 * Updates the active states, camera, mouse, and sounds.
 		 */
-		protected function update():void {
+		public function update():void {
 			for (var i:uint = 0; i < states.length; i++) {
 				var state:AxState = states[i];
 				if (i == states.length - 1 || state.persistantUpdate) {
@@ -602,7 +610,7 @@ package org.axgl {
 		/**
 		 * Draws the active states.
 		 */
-		protected function draw():void {
+		public function draw():void {
 			context.clear(background.red, background.green, background.blue);
 			context.setCulling(Context3DTriangleFace.NONE);
 			context.setDepthTest(false, Context3DCompareMode.ALWAYS);

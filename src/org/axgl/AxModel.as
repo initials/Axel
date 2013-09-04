@@ -163,6 +163,17 @@ package org.axgl {
 		}
 		
 		/**
+		 * Alias to set this object's origin (used for scaling) the center of the model.
+		 * 
+		 * @return This object.
+		 */
+		public function centerOrigin():AxModel {
+			origin.x = width / 2;
+			origin.y = height / 2;
+			return this;
+		}
+		
+		/**
 		 * @inheritDoc
 		 */
 		override public function hover():Boolean {

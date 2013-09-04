@@ -113,6 +113,20 @@ package org.axgl.camera {
 			this.target = target;
 			this.padding = padding;
 		}
+		
+		/**
+		 * Controls where in the world the camera can move. Set it to the bounds of your world to
+		 * stop the camera from moving outside the bounds of the level.
+		 */
+		public function setBounds(x:Number, y:Number, width:Number, height:Number):void {
+			if (bounds == null) {
+				bounds = new AxRect;
+			}
+			bounds.x = x;
+			bounds.y = y;
+			bounds.width = width;
+			bounds.height = height;
+		}
 
 		/**
 		 * Updates the camera's coordinates if it is following an entity.

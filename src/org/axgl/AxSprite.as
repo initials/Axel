@@ -8,10 +8,12 @@ package org.axgl {
 	import flash.geom.Vector3D;
 	
 	import org.axgl.effect.sprite.AxAlphaSpriteEffect;
+	import org.axgl.effect.sprite.AxFlashSpriteEffect;
 	import org.axgl.effect.sprite.AxFlickerSpriteEffect;
 	import org.axgl.effect.sprite.AxScaleSpriteEffect;
 	import org.axgl.effect.sprite.AxSpriteEffect;
 	import org.axgl.render.AxQuad;
+	import org.axgl.render.AxTexture;
 	import org.axgl.resource.AxResource;
 	import org.axgl.util.AxAnimation;
 	import org.axgl.util.AxCache;
@@ -83,6 +85,8 @@ package org.axgl {
 		private var fadeEffect:AxAlphaSpriteEffect;
 		/** The internal scale effect used for the grow function. */
 		private var growEffect:AxScaleSpriteEffect;
+		/** The internal flash effect used for the flash function. */
+		private var flashEffect:AxFlashSpriteEffect;
 
 		/**
 		 * Creates a new sprite at the given position. Loads the image in graphic using the given frameWidth and frameHeight. If
@@ -119,7 +123,8 @@ package org.axgl {
 		}
 
 		/**
-		 * Loads a new graphic for this sprite with the specified frame width and height.
+		 * Loads a new graphic for this sprite with the specified frame width and height. The graphic can be one of:
+		 * class (embedded graphic), an instance of BitmapData, or an AxTexture.
 		 * 
 		 * @param graphic The graphic to load for this sprite.
 		 * @param frameWidth The width of each frame in the graphic.
@@ -152,7 +157,7 @@ package org.axgl {
 		 *
 		 * @return The sprite instance.
 		 */
-		public function create(width:uint, height:uint, color:uint):AxSprite {
+		public function create(width:uint, height:uint, color:uint = 0xff000000):AxSprite {
 			var bitmap:BitmapData = new BitmapData(width, height, true, color);
 			return load(bitmap, width, height);
 		}
@@ -230,7 +235,7 @@ package org.axgl {
 		 * @param graphic The graphic to create the texture from.
 		 */
 		private function calculateTexture(graphic:*):void {
-			texture = AxCache.texture(graphic);
+			texture = graphic is AxTexture ? graphic : AxCache.texture(graphic);
 			if (frameWidth == 0 || frameHeight == 0) {
 				frameWidth = texture.rawWidth;
 				frameHeight = texture.rawHeight;
@@ -301,11 +306,11 @@ package org.axgl {
 					if (frame + 1 < animation.frames.length || animation.looped) {
 						frame = (frame + 1) % animation.frames.length;
 					}
+					uvOffset[0] = (animation.frames[frame] % framesPerRow) * quad.uvWidth;
+					uvOffset[1] = Math.floor(animation.frames[frame] / framesPerRow) * quad.uvHeight;
 					if (frame + 1 == animation.frames.length && animation.callback != null) {
 						animation.callback();
 					}
-					uvOffset[0] = (animation.frames[frame] % framesPerRow) * quad.uvWidth;
-					uvOffset[1] = Math.floor(animation.frames[frame] / framesPerRow) * quad.uvHeight;
 				}
 			} else {
 				uvOffset[0] = (frame % framesPerRow) * quad.uvWidth;
@@ -391,7 +396,7 @@ package org.axgl {
 				dirty = false;
 			}
 
-			if ((zooms && (screen.x > Ax.viewWidth || screen.y > Ax.viewHeight || screen.x + frameWidth < 0 || screen.y + frameHeight < 0)) || scale.x == 0 || scale.y == 0) {
+			if ((zooms && ((screen.x - offset.x) > Ax.viewWidth || (screen.y - offset.y) > Ax.viewHeight || screen.x + frameWidth < 0 || screen.y + frameHeight < 0)) || scale.x == 0 || scale.y == 0) {
 				return;
 			}
 			
@@ -490,10 +495,18 @@ package org.axgl {
 			return this;
 		}
 		
-		public function clearEffects():AxSprite {
+		public function clearEffects(skipCallback:Boolean = false):AxSprite {
+			if (effects == null) {
+				return this;
+			}
+			
 			for each(var effect:AxSpriteEffect in effects) {
 				if (effect.active) {
-					effect.destroy();
+					if (skipCallback) {
+						effect.active = false;
+					} else {
+						effect.destroy();
+					}
 				}
 			}
 			effects.length = 0;
@@ -539,6 +552,14 @@ package org.axgl {
 			return this;
 		}
 		
+		public function flash(duration:Number = 0.1, color:uint = 0xffff0000, callback:Function = null):AxSprite {
+			if (flashEffect != null && flashEffect.active) {
+				flashEffect.destroy();
+			}
+			addEffect(flashEffect = new AxFlashSpriteEffect(duration, callback, color));
+			return this;
+		}
+		
 		/**
 		 * @inheritDoc
 		 */
@@ -556,7 +577,7 @@ package org.axgl {
 					}
 				}
 			} else if (other is AxCloud) {
-				var sprites:Vector.<AxSprite> = (other as AxCloud).members;
+				var sprites:Vector.<AxSprite> = (other as AxCloud).members as Vector.<AxSprite>;
 				for each (var s:AxSprite in sprites) {
 					if (s.exists && overlaps(s)) {
 						overlapFound = true;

@@ -18,10 +18,6 @@ package org.axgl.util {
 		private static var textures:Object;
 		private static var shaders:Object;
 		
-		{
-			reset();
-		}
-		
 		/**
 		 * Resets the cache, causing all new objects to create new instances of their buffers, textures, and shaders.
 		 * Existing objects will continue to have their references to the old cached version.
@@ -98,6 +94,9 @@ package org.axgl.util {
 		}
 		
 		public static function texture(resource:*):AxTexture {
+			if (resource == null) {
+				throw new ArgumentError("Cannot create a texture from a null resource");
+			}
 			var rawBitmap:BitmapData;
 			if (resource is Class) {
 				if (textures[resource] != null) {
@@ -128,7 +127,7 @@ package org.axgl.util {
 			return textures[resource];
 		}
 		
-		private static function nextPowerOfTwo(current:uint):uint {
+		public static function nextPowerOfTwo(current:uint):uint {
 			current--;
 			current = (current >> 1) | current;
 			current = (current >> 2) | current;

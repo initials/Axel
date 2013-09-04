@@ -154,7 +154,8 @@ package org.axgl.text {
 			}
 
 			if (characterArray.length > 0) {
-				throw new Error(characterArray.join(":") + "Invalid bitmap font image. Number of characters in image doesn't match alphabet.");
+				// FIXME
+				//throw new Error("Invalid bitmap font image. Number of characters in image doesn't match alphabet. Remaining characters: " + characterArray.join(" "));
 			}
 
 			return af;
@@ -242,12 +243,6 @@ package org.axgl.text {
 				axc.uv.y /= af.texture.height;
 				axc.uv.height /= af.texture.height;
 			}
-			
-			tf.text = "Test";
-			tf.x = 100;
-			tf.y = 125;
-			//tf.scaleX = tf.scaleY = 2;
-			Ax.stage2D.addChild(tf);
 
 			return af;
 		}

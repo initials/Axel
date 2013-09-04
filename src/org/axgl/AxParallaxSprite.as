@@ -29,7 +29,7 @@ package org.axgl {
 			texture = AxCache.texture(graphic);
 			var uvWidth:Number = texture.rawWidth / texture.width;
 			var uvHeight:Number = texture.rawHeight / texture.height;
-			vertexBuffer = AxCache.vertexBuffer(texture.rawWidth , texture.rawHeight, uvWidth, uvHeight);
+			vertexBuffer = AxCache.vertexBuffer(texture.rawWidth, texture.rawHeight, uvWidth, uvHeight);
 			indexBuffer = SPRITE_INDEX_BUFFER;
 			uvParams = new Vector.<Number>(4, true); // [uvOffset.x, uvOffset.y, uvWidth, uvHeight]
 			uvParams[2] = uvWidth;
@@ -42,6 +42,14 @@ package org.axgl {
 		}
 		
 		override public function draw():void {
+			if (indexBuffer == null) {
+				if (SPRITE_INDEX_BUFFER == null) {
+					SPRITE_INDEX_BUFFER = Ax.context.createIndexBuffer(6);
+					SPRITE_INDEX_BUFFER.uploadFromVector(Vector.<uint>([0, 1, 2, 1, 2, 3]), 0, 6);
+				}
+				indexBuffer = SPRITE_INDEX_BUFFER;
+			}
+			
 			colorTransform[RED] = color.red;
 			colorTransform[GREEN] = color.green;
 			colorTransform[BLUE] = color.blue;
@@ -71,11 +79,17 @@ package org.axgl {
 			uvParams[0] = (parallaxMode & HORIZONTAL) ? (Ax.camera.position.x + Ax.camera.effectOffset.x) / texture.width * scroll.x : 0;
 			uvParams[1] = (parallaxMode & VERTICAL) ? (Ax.camera.position.y + Ax.camera.effectOffset.y) / texture.height * scroll.y : 0;
 			
+			if (blend == null) {
+				Ax.context.setBlendFactors(Context3DBlendFactor.SOURCE_ALPHA, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
+			} else {
+				Ax.context.setBlendFactors(blend.source, blend.destination);
+			}
+			
 			Ax.context.setTextureAt(0, texture.texture);
-			Ax.context.setBlendFactors(Context3DBlendFactor.SOURCE_ALPHA, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
 			Ax.context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, matrix, true);
 			Ax.context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 4, uvParams);
 			Ax.context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, colorTransform);
+			Ax.context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 4, uvParams);
 			Ax.context.setVertexBufferAt(0, vertexBuffer, 0, Context3DVertexBufferFormat.FLOAT_2);
 			Ax.context.setVertexBufferAt(1, vertexBuffer, 2, Context3DVertexBufferFormat.FLOAT_2);
 			Ax.context.drawTriangles(indexBuffer, 0, triangles);
@@ -92,19 +106,18 @@ package org.axgl {
 		 * The parallax vertex shader for this sprite.
 		 */
 		private static const VERTEX_SHADER:Array = [
-			"m44 vt0, va0, vc0",
-			"add v0, va1, vc4",
-			"mov op, vt0"
+			"add v0.xyzw, va1.xyxy, vc4.xyxy",
+			"m44 op, va0, vc0",
 		];
 		
 		/**
 		 * The parallax fragment shader for this sprite.
 		 */
 		private static const FRAGMENT_SHADER:Array = [
-			"div ft0.xyzw, v0.xy, v0.zw",
-			"frc ft0.xy, ft0.xy",
-			"mul ft0.xy, ft0.xy, v0.zw",
-			"tex ft0, ft0, fs0 <2d,nearest,mipnone>",
+			"div ft0.xyxy, v0.xyxy, fc4.zwzw",
+			"frc ft0.xyzw, ft0.xyxy",
+			"mul ft0.xyxy, ft.xyxy, fc4.zwzw",
+			"tex ft0, ft0, fs0 <2d,repeat,nearest>",
 			"mul oc, fc0, ft0"
 		];
 		
@@ -112,10 +125,5 @@ package org.axgl {
 		 * A static sprite index buffer that all AxParallaxSprites will use.
 		 */
 		public static var SPRITE_INDEX_BUFFER:IndexBuffer3D;
-		
-		{
-			SPRITE_INDEX_BUFFER = Ax.context.createIndexBuffer(6);
-			SPRITE_INDEX_BUFFER.uploadFromVector(Vector.<uint>([0, 1, 2, 1, 2, 3]), 0, 6);
-		}
 	}
 }
