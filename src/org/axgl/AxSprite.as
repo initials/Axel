@@ -72,6 +72,12 @@ package org.axgl {
 		 */
 		public var flip:uint = LEFT;
 		
+		
+		public function centerOffsets():void
+		{
+			
+		
+		}
 		/**
 		 * Creates a new sprite at the given position. Loads the image in graphic using the given frameWidth and frameHeight. If
 		 * frameWidth or frameHeight are 0, then the entire image is treated as a single frame. If you do not pass a graphic here,
