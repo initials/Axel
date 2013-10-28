@@ -118,6 +118,13 @@ package org.axgl {
 		 * If you set fixed framerate to true, this will always return 1/framerate.
 		 */
 		public static var dt:Number = 0;
+		
+		/**
+		 * 
+		 */
+		public static var elapsed:Number = 0;
+		
+
 		/**
 		 * Read-only. Counts the number of frames since the current "second" began in order to calculate fps.
 		 * @default
@@ -537,6 +544,8 @@ package org.axgl {
 				frames = 0;
 				frameStart = now;
 			}
+			
+			elapsed = dt;
 		}
 
 		/**
