@@ -269,7 +269,7 @@ package org.axgl {
 			return this;
 		}
 		public function play(name:String, reset:Boolean = false):AxSprite {
-			return animate(name, reset);
+			return animate(name);
 			
 		}
 		/**
