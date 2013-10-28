@@ -126,7 +126,9 @@ package org.axgl {
 			dirty = true;
 			return this;
 		}
-		
+		public function loadGraphic(graphic:*, animated:Boolean=false, reverse:Boolean = false, frameWidth:uint = 0, frameHeight:uint = 0):AxSprite {
+			return load(graphic, frameWidth, frameHeight);
+		}
 		/**
 		 * Creates a new graphic for this sprite, filling it with a single color. Use this to create solid colored square
 		 * graphics quickly and easily. Color should include alpha and be in the format 0xAARRGGBB.
@@ -266,7 +268,10 @@ package org.axgl {
 			}
 			return this;
 		}
-		
+		public function play(name:String, reset:Boolean = false):AxSprite {
+			return animate(name, reset);
+			
+		}
 		/**
 		 * Stops the current animation (if one is playing), and tells the sprite to show a static frame. That frame does
 		 * not need to be part of any animation.
