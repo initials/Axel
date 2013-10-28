@@ -51,6 +51,9 @@ package org.axgl.text {
 			build();
 		}
 
+/*		public function AxText(x:Number, y:Number, width:uint = 0, text:String, embeddedFont:Boolean = true) {
+			return AxText(x, y, false, text, width, "left");
+		}*/
 		/**
 		 * Splits the passed text into lines using the given font and the given width.
 		 * 

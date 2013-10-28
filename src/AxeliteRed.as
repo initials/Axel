@@ -1,7 +1,7 @@
 package {
 	import net.axgl.state.GameState;
 	import net.axgl.state.TitleState;
-	import com.initialsgames.src.PCMenuState;
+	import com.initialsgames.axsrc.PCIntroState;
 	
 	import org.axgl.Ax;
 	
@@ -10,7 +10,7 @@ package {
 	public class AxeliteRed extends Ax {
 		public function AxeliteRed() {
 			// Start in our TitleState
-			super(PCMenuState);
+			super(PCIntroState);
 		}
 		
 		override public function create():void {

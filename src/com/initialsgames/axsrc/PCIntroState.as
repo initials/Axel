@@ -1,6 +1,8 @@
-package com.initialsgames.src
+package com.initialsgames.axsrc
 {
 	import org.axgl.*;
+
+	import org.axgl.text.AxText;
 
 	public class PCIntroState extends AxState
 	{
@@ -18,11 +20,11 @@ package com.initialsgames.src
 		{
 			
 			clicks = 0;
-			Ax.mouse.hide();
+			//Ax.mouse.hide();
 			
-			Ax.camera.zoom = 1;
+			//Ax.camera.zoom = 1;
 				
-			Ax.bgColor = 0xffd3bdb2;
+			//Ax.bgColor = 0xffd3bdb2;
 			
 			logo = new AxSprite(0, 0, Registry.ImgLogo);
 			add(logo);
@@ -53,10 +55,10 @@ package com.initialsgames.src
 			army.drag.x = 2000;
 			//army.velocity.x = 1630;
 			
-			pressStart = new AxText(0, Ax.height - 40, Ax.width, "", true);
+/*			pressStart = new AxText(0, Ax.height - 40, Ax.width, "", true);
 			pressStart.size = 16;
 			pressStart.shadow = 0xff000000;
-			add(pressStart);
+			add(pressStart);*/
 			
 			pressStart.text = "Press " + Registry.p1Action + ", " + Registry.p1Jump + ", " + Registry.p1Switch + " to start.";
 			
