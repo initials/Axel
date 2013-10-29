@@ -42,6 +42,16 @@ package org.axgl.input {
 		public function pressed(key:uint):Boolean {
 			return keys[key] >= Ax.then && keys[key] < Ax.now && Ax.then > 0;
 		}
+		
+		/**
+		 * Check to see if this key was just pressed.
+		 * 
+		 * @param	Key		One of the key constants listed above (e.g. "LEFT" or "A").
+		 * 
+		 * @return	Whether the key was just pressed
+		 */
+		public function justPressed(Key:String):Boolean { return _map[_lookup[Key]].current == 2; }
+		
 
 		/**
 		 * Returns whether or not the passed input was just released. Fires once each time

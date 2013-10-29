@@ -68,5 +68,37 @@ package org.axgl.input {
 			this.x = screen.x / Ax.zoom + Ax.camera.x;
 			this.y = screen.y / Ax.zoom + Ax.camera.y;
 		}
+		
+		
+		
+		public function show(Graphic:Class=null,Scale:Number=1,XOffset:int=0,YOffset:int=0):void
+		{
+/*			_cursorContainer.visible = true;
+			if(Graphic != null)
+				load(Graphic,Scale,XOffset,YOffset);
+			else if(_cursor == null)
+				load();*/
+		}
+		
+		/**
+		 * Hides the mouse cursor
+		 */
+		public function hide():void
+		{
+			//_cursorContainer.visible = false;
+		}
+		
+		/**
+		 * Check to see if the mouse was just released.
+		 * 
+		 * @return	Whether the mouse was just released.
+		 */
+		public function justReleased():Boolean { return _current == -1; }
+		
+		/**
+		 * Helper variable for tracking whether the mouse was just pressed or just released.
+		 */
+		protected var _current:int;
+		
 	}
 }

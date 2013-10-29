@@ -3,6 +3,7 @@ package com.initialsgames.axsrc
 	import org.axgl.*;
 
 	import org.axgl.text.AxText;
+	//import com.initialsgames.axsrc.PCIntroStat;
 
 	public class PCIntroState extends AxState
 	{
@@ -20,7 +21,8 @@ package com.initialsgames.axsrc
 		{
 			
 			clicks = 0;
-			//Ax.mouse.hide();
+			
+			Ax.mouse.hide();
 			
 			//Ax.camera.zoom = 1;
 				
@@ -71,7 +73,7 @@ package com.initialsgames.axsrc
 		}
 		
 		public function endFade():void {
-			Ax.switchState(new PCMenuState());
+			//Ax.switchState(new PCMenuState());
 		}
 
 		override public function update():void
@@ -92,7 +94,7 @@ package com.initialsgames.axsrc
 					worker.velocity.x = -1630;
 					army.velocity.x = 1630;		
 					Ax.play(Registry.SndJump, 0.9);
-					Ax.fade(0xffd3bdb2, 1, endFade);
+					//Ax.fade(0xffd3bdb2, 1, endFade);
 					
 				}				
 				
@@ -104,8 +106,8 @@ package com.initialsgames.axsrc
 			
 			if (worker.x < -225 || clicks>5) {
 
-				
-				Ax.switchState(new PCMenuState());
+				//bring back
+				//Ax.switchState(new PCMenuState());
 			}
 		}
 	}

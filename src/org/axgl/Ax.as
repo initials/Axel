@@ -157,6 +157,11 @@ package org.axgl {
 		 * Read-only. The camera object. Use this set the bounds where your camera can move, set it to follow objects, etc.
 		 */
 		public static var camera:AxCamera;
+		/**
+		 * Will only make and update joystick if you are using it
+		 */
+		static public var usingJoystick:Boolean = false;
+		
 
 		/**
 		 * Read-only. A group containing all the currently active sounds, including music.
@@ -679,7 +684,10 @@ package org.axgl {
 			sounds.add(soundObject);
 			return soundObject;
 		}
-
+		public static function play(soundFile:Class, volume:Number = 1, loop:Boolean = false, start:Number = 0):AxSound {
+			return sound(soundFile, volume, loop, start);
+			
+		}
 		/**
 		 * Plays an embedded music file.
 		 *
