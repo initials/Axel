@@ -3,6 +3,10 @@ package com.initialsgames.axsrc
 	import org.axgl.*;
 
 	import org.axgl.text.AxText;
+	import org.axgl.input.AxMouseButton;
+	import com.initialsgames.axsrc.Registry;
+	import org.axgl.input.AxKey;
+	
 	//import com.initialsgames.axsrc.PCIntroStat;
 
 	public class PCIntroState extends AxState
@@ -79,8 +83,9 @@ package com.initialsgames.axsrc
 		override public function update():void
 		{
 			
+			//|| Ax.joystick.j1ButtonAJustPressed || Ax.joystick.j1ButtonBJustPressed 
 			
-			if (Ax.mouse.justPressed() || Ax.keys.justPressed(Registry.p1Action) || Ax.keys.justPressed(Registry.p1Switch) || Ax.keys.justPressed(Registry.p1Jump) || Ax.joystick.j1ButtonAJustPressed || Ax.joystick.j1ButtonBJustPressed  ) {
+			if (Ax.mouse.pressed(AxMouseButton.LEFT) || Ax.keys.pressed(AxKey.(Registry.p1Action)) || Ax.keys.pressed(AxKey.(Registry.p1Switch)) || Ax.keys.pressed(AxKey.(Registry.p1Jump))  ) {
 				clicks++;
 				if (clicks == 1) {
 					worker.velocity.x = -1630;

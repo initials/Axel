@@ -1,4 +1,5 @@
 package net.axgl.state {
+	import com.initialsgames.axsrc.Registry;
 	import net.axgl.resource.Resource;
 	
 	import org.axgl.Ax;
@@ -8,6 +9,8 @@ package net.axgl.state {
 	import org.axgl.AxU;
 	import org.axgl.input.AxKey;
 	import org.axgl.text.AxText;
+	
+	import com.initialsgames.axsrc.Exit;
 
 	public class TitleState extends AxState {
 		private var background:AxSprite;
@@ -33,6 +36,13 @@ package net.axgl.state {
 			// Don't update or draw this state when it's not the active state
 			persistantUpdate = false;
 			persistantDraw = false;
+			
+			
+			Registry.levelType = 2;
+			var exit:Exit  = new Exit(10, 10, 1);
+			add(exit);
+			
+			
 		}
 
 		override public function update():void {

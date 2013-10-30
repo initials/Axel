@@ -89,13 +89,6 @@ package org.axgl.input {
 		}
 		
 		/**
-		 * Check to see if the mouse was just released.
-		 * 
-		 * @return	Whether the mouse was just released.
-		 */
-		public function justReleased():Boolean { return _current == -1; }
-		
-		/**
 		 * Helper variable for tracking whether the mouse was just pressed or just released.
 		 */
 		protected var _current:int;

@@ -5,12 +5,12 @@ package {
 	
 	import org.axgl.Ax;
 	
-	[SWF(width = "600", height = "384", backgroundColor = "#333333")]
+	[SWF(width="1040", height="780", backgroundColor="#d3bdb2")]
 	
 	public class AxeliteRed extends Ax {
 		public function AxeliteRed() {
 			// Start in our TitleState
-			super(PCIntroState);
+			super(TitleState);
 		}
 		
 		override public function create():void {
